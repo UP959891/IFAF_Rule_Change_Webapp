@@ -1,7 +1,5 @@
 import java.io.Serializable;
 import javax.enterprise.context.SessionScoped;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 import javax.inject.Named;
 
 @Named
@@ -27,16 +25,12 @@ public class loginSignup implements Serializable {
     }
 
     public String login() {
-        // Check the username and password
-        if (username.equals("admin") && password.equals("password")) {
+        if (DBConnection.validateUser(username, password)) {
+            // User is authenticated
             return "welcome";
         } else {
-            FacesContext.getCurrentInstance().addMessage(
-                null,
-                new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                "Invalid username or password",
-                "Please try again"));
-            return null;
+            // Invalid username or password
+            return "fail";
         }
     }
 }
