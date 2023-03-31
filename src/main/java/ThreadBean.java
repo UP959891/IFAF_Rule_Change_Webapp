@@ -14,10 +14,9 @@ import java.io.Serializable;
 import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
-import com.fasterxml.jackson.core.type.TypeReference;
+import javax.json.bind.Jsonb;
+import javax.json.bind.JsonbBuilder;
+import javax.json.bind.type.Type;
 
 
 @Named
@@ -62,17 +61,18 @@ public class ThreadBean implements Serializable{
         System.setProperty("threads", threadsJson);
     }
 
-    private List<Thread> parseThreadsFromJson(String threadsJson) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        TypeReference<List<Thread>> typeReference = new TypeReference<List<Thread>>() {
-        };
-        return objectMapper.readValue(threadsJson, typeReference);
+    private List<Thread> parseThreadsFromJson(String threadsJson) {
+        // TODO: Implement this method to parse the JSON string into a list of Thread objects
+        Jsonb jsonb = JsonbBuilder.create();
+        Type listType = new ArrayList<Thread>() {}.getClass().getGenericSuperclass();
+        return jsonb.fromJson(threadsJson, listType);
     }
-
 
     private String convertThreadsToJson(List<Thread> threads) {
         // TODO: Implement this method to convert the list of Thread objects into a JSON string
-        return null;
+        Jsonb jsonb = JsonbBuilder.create();
+        String jsonString = jsonb.toJson(threads);
+	return jsonString;
     }
 
     public List<Thread> getThreads() {
@@ -124,6 +124,30 @@ public class ThreadBean implements Serializable{
 
         public List<Comment> getComments() {
             return comments;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public void setAuthor(String author) {
+            this.author = author;
+        }
+
+        public void setDate(Date date) {
+            this.date = date;
+        }
+
+        public void setContent(String content) {
+            this.content = content;
+        }
+
+        public void setComments(List<Comment> comments) {
+            this.comments = comments;
         }
     }
 
